@@ -1,0 +1,23 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+<center>
+    <div class="container">
+        {% if request.method == 'POST' %}
+        <div class="alert alert-warning">
+            <strong>{{ error }}</strong>
+        </div>
+        {% endif %}
+        <form class="form-group" action="{% url 'gwent_login' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn btn-default" type="submit" name="login" value="Log in">
+        </form>
+        <form class="form-group" action="{% url 'gwent_create_user' %}" method="POST">
+            {% csrf_token %}
+            <input class="btn btn-default" type="submit" name="login" value="Create User">
+        </form>
+    </div>
+</center>
+
+{% endblock %}

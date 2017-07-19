@@ -1,0 +1,45 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+<div class="container-fluid">
+    <div>
+        <h2>{{ article.title }}</h2>
+        <h6>by {{ article.author }}</h6>
+    </div>
+    <div>
+        <p>{{ article.content }}</p>
+    </div>
+    <div>
+        <span>Rank: {{ article.ranking }}</span><br>
+        <span>{{ article.date_added }}</span>
+    </div>
+</div>
+<hr>
+<div class="container-fluid">
+    {% for comment in comments %}
+    <ul>
+        <li>
+            <p> {{ comment.content }}</p>
+            <h6><em>by {{ comment.author }} on {{ comment.date_added }} with {{ comment.ranking }} points</em></h6>
+        </li>
+    </ul>
+        {% empty %}
+        <p>No comments yet</p>
+    {% endfor %}
+</div>
+<hr>
+{% if user.is_authenticated %}
+<div class="container-fluid form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-default" type="submit" value="Add comment">
+    </form>
+</div>
+{% else %}
+<div>
+    <h5>Please log in to add comments</h5>
+</div>
+{% endif %}
+
+{% endblock %}

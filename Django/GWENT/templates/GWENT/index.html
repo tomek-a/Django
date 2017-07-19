@@ -1,0 +1,58 @@
+{% extends 'GWENT/base.html' %}
+{% block basecontent %}
+
+<div class="container-fluid">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Top articles/blog posts</div>
+            <div class="panel-body">
+                <p>Most recent, most viewed content</p>
+            </div>
+
+            <!-- Table -->
+            <table class="table table-hover">
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Author</th>
+                    <th>Karma</th>
+                    <th>Added</th>
+                </tr>
+                {% for content in content_list %}
+                <tr class='clickable-row' data-href='/GWENT/{{ content.kind }}/{{ content.id }}'>
+                    <td>{{ content.title }}</td>
+                    <td>{{ content.type }}</td>
+                    <td>{{ content.author }}</td>
+                    <td>{{ content.ranking }}</td>
+                    <td>{{ content.date_added }}</td>
+                </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+
+
+    </div>
+    <div class="col-md-6">
+        <div>
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Newest, best rated decks</div>
+                <div class="panel-body">
+                    <p>Hot decks</p>
+                </div>
+
+                <!-- Table -->
+                <table class="table">
+                    {% block content-right %}
+                    {% endblock %}
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

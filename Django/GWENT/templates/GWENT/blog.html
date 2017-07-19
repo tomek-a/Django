@@ -1,0 +1,16 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+<div class="container-fluid">
+    <div>
+        <h2>{{ blog.title }}</h2>
+        <h6>by {{ blog.author }}</h6>
+    </div>
+    <div>
+        <p>{{ blog.content }}</p>
+    </div>
+    <div>
+        <span>{{ blog.date_added }}</span>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+<div class="container-fluid">
+<table class="table table-hover">
+    {% for card in card_list %}
+        <tr class='clickable-row' data-href='/GWENT/card/{{ forloop.counter }}'>
+            <td>{{ card.name }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

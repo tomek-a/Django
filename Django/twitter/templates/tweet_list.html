@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for tweet in tweet_list %}
+        <p>
+            <a href="/{{ tweet.user }}/{{ tweet.id }}"><fieldset>
+            {{ tweet.content | slice:':30' }}<br>
+            <font size="2">{{ tweet.creation_date }}</font>
+            </fieldset></a>
+        </p>
+    {% endfor %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add tweet">
+    </form>
+
+{% endblock %}

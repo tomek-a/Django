@@ -1,0 +1,18 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+{% for article in article_list %}
+
+    <div class="container-fluid col">
+        <div>
+            <a href="/GWENT/article/{{ article.id }}">
+                <h3>{{ article.title }}</h3>
+            </a>
+            <h6>by {{ article.author }}</h6>
+        </div>
+        <div>
+            <p>{{ article.content | truncatewords:100 }}</p>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
