@@ -6,32 +6,24 @@ from urllib.request import Request, urlopen
 from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect
 #FORMS
-from .forms import LoginForm, AddCommentForm
+from .forms import LoginForm, AddCommentForm, CreateUserForm
 #MODELS, VIEWS
 from django.contrib.auth.models import User
-from .models import Article, Comment, Blog
+from .models import Article, Comment, Blog, Card
 from django.views import View
 #AUTHENTICATION
 from django.contrib.auth import authenticate, login, logout
+#PAGINATION
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+#Q QUERY
+from django.db.models import Q
 #---------------------------------------------------------------------------------------------------------------------
-#getting card list from GWENTApi
-#---------------------------------------------------------------------------------------------------------------------
-url_request = Request(
-            'https://api.gwentapi.com/v0/cards?limit=305', #actuall card pool size 305
-            headers={"User-Agent": "Magic-Browser"}
-)
-r = urlopen(url_request)
-data_ = r.read().decode(r.info().get_param('charset') or 'utf-8')
-data = json.loads(str(data_))
-card_list = data['results']
+
 #---------------------------------------------------------------------------------------------------------------------
 class BaseGwentView(View):
     def get(self, request):
         article_query = Article.objects.all().order_by('date_added')
         blog_query = Blog.objects.all().order_by('date_added')
-
-        article_list = []
-        blog_list = []
         content_list = []
         #functions changing query object to dictionary
         def getArt(article):
@@ -55,33 +47,33 @@ class BaseGwentView(View):
                 'kind': 'blog'
 
             }
-
         #making content_list
         content_amount = 10
         i = len(article_query)-1 #matching list indexes
         y = len(blog_query)-1
-        for c_a in range(content_amount):
-            print(i)
-            print(y)
-            if (y != -1 and i != -1):
-                if getArt(article_query[i])['date_added'] <= getBlog(blog_query[y])['date_added']:
-                    content_list.append(getBlog(blog_query[y]))
-                    y -= 1
-                else:
+        if i >= 0 or y >= 0:
+            for c_a in range(content_amount):
+                print(i)
+                print(y)
+                if (y != -1 and i != -1):
+                    if getArt(article_query[i])['date_added'] <= getBlog(blog_query[y])['date_added']:
+                        content_list.append(getBlog(blog_query[y]))
+                        y -= 1
+                    else:
+                        content_list.append(getArt(article_query[i]))
+                        i -= 1
+                elif y == -1:
                     content_list.append(getArt(article_query[i]))
                     i -= 1
-            elif y == -1:
-                content_list.append(getArt(article_query[i]))
-                i -= 1
-                if i == -1:
+                    if i == -1:
+                        break
+                elif i == -1:
+                    content_list.append(getBlog(blog_query[y]))
+                    y -= 1
+                    if y == -1:
+                        break
+                else:
                     break
-            elif i == -1:
-                content_list.append(getBlog(blog_query[y]))
-                y -= 1
-                if y == -1:
-                    break
-            else:
-                break
         ctx = {
             'content_list': content_list
         }
@@ -126,48 +118,62 @@ class LoginView(View):
 #---------------------------------------------------------------------------------------------------------------------
 class CreateUserView(View):
     def get(self, request):
-        pass
+        form = CreateUserForm()
+        ctx = {
+            'form': form
+        }
+        return TemplateResponse(request, 'GWENT/create_user.html', ctx)
+
+    def post(self, request):
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            email = form.cleaned_data['email']
+            emails = []
+            usernames = []
+            users = User.objects.all()
+            for user in users:
+                emails.append(user.email)
+            for user in users:
+                usernames.append(user.username)
+            if email in emails or username in usernames:
+                error = 'EMAIL/USERNAME ALREADY IN USE, PLEASE TRY ANOTHER'
+                ctx = {
+                    'form': form,
+                    'error': error
+                }
+                return TemplateResponse(request, 'GWENT/create_user.html', ctx)
+            else:
+                User.objects.create_user(username=username, password=password, email=email)
+                return HttpResponseRedirect('/GWENT/login')
+
 #---------------------------------------------------------------------------------------------------------------------
 class CardsView(View):
     def get(self, request):
+        card_list = Card.objects.all()
+        paginator = Paginator(card_list, 20)
+        page = request.GET.get('page')
+        page_num = paginator.num_pages
+        try:
+            cards = paginator.page(page)
+        except PageNotAnInteger:
+            cards = paginator.page(1)
+        except EmptyPage:
+            cards = paginator.page(paginator.num_pages)
         ctx = {
-            'card_list': card_list
+            'cards': cards,
+            'page': page,
+            'page_num': range(page_num)
         }
         return TemplateResponse(request, 'GWENT/card_list.html', ctx)
-
+#---------------------------------------------------------------------------------------------------------------------
 class CardView(View):
     def get(self, request, card_id):
-        card_id = int(card_id) - 1
-        card_link = card_list[card_id]['href']
+        card = Card.objects.get(pk=card_id)
 
-        card_url_request = Request(card_link, headers={"User-Agent": "Magic-Browser"})
-        r_card = urlopen(card_url_request)
-        card_data_ = r_card.read().decode(r_card.info().get_param('charset') or 'utf-8')
-        card_data = json.loads(str(card_data_))
-        thumbnail_link_json = card_data['variations'][0]['href']
-
-        thumbnail_url_request = Request(thumbnail_link_json, headers={"User-Agent": "Magic-Browser"})
-        r_thumb = urlopen(thumbnail_url_request)
-        thumb_data_ = r_thumb.read().decode(r_thumb.info().get_param('charset') or 'utf-8')
-        thumbnail = json.loads(str(thumb_data_))
-        thumbnail_link = thumbnail['art']['thumbnailImage']
-
-
-
-        try:
-            strength = card_data['strength']
-        except:
-            strength = 'None'
         ctx = {
-            'name': card_data['name'],
-            'faction': card_data['faction']['name'],
-            'text': card_data['info'],
-            'strength': strength,
-            'type': card_data['group']['name'],
-            'rarity': card_data['variations'][0]['rarity']['name'],
-            'row': ', '.join(card_data['positions']),
-            'flavor': card_data['flavor'],
-            'thumbnail_link': thumbnail_link
+            'card': card
         }
         return TemplateResponse(request, 'GWENT/card.html', ctx)
 #---------------------------------------------------------------------------------------------------------------------
@@ -197,7 +203,7 @@ class ArticleView(View):
         if form.is_valid():
             content = form.cleaned_data['content']
             article = Article.objects.get(pk=article_id)
-            new_comment = Comment.objects.create(
+            Comment.objects.create(
                 author = request.user,
                 content = content,
                 article = article
@@ -219,6 +225,41 @@ class BlogView(View):
             'blog': blog
         }
         return TemplateResponse(request, 'GWENT/blog.html', ctx)
+#---------------------------------------------------------------------------------------------------------------------
+class DeckBuilderView(View):
+    def get(self, request):
+        monster_leaders = Card.objects.filter(type='Leader', faction='Monster')
+        skellige_leaders = Card.objects.filter(type='Leader', faction='Skellige')
+        scoiatael_leaders = Card.objects.filter(type='Leader', faction="Scoia'tael")
+        northernrealms_leaders = Card.objects.filter(type='Leader', faction='Northern Realms')
+        nilfgaard_leaders = Card.objects.filter(type='Leader', faction='Nilfgaard')
+
+        ctx = {
+            'monster_leaders': monster_leaders,
+            'skellige_leaders': skellige_leaders,
+            'scoiatael_leaders': scoiatael_leaders,
+            'northernrealms_leaders': northernrealms_leaders,
+            'nilfgaard_leaders': nilfgaard_leaders
+        }
+        return TemplateResponse(request, 'GWENT/deck_builder_choice.html', ctx)
+
+
+class DeckBuilderFactionView(View):
+    def get(self, request, faction):
+        cards = Card.objects.filter(
+            Q(faction=faction) | Q(faction='neutral')
+        )
+        ctx = {
+            'cards': cards
+        }
+        return TemplateResponse(request, 'GWENT/deck_builder.html', ctx)
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,13 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+    <div class="container">
+    {% for card in cards %}
+        {% if card.type == 'Leader' or card.type == 'Silver' or card.type == 'Gold' %}
+        <span><img src="{{ card.thumbnail_link }}" style="width:5%"></span><span class="amount"> [0/1] </span>
+        {% else %}
+        <span><img src="{{ card.thumbnail_link }}" style="width:5%"></span><span class="amount"> [0/3] </span>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endblock %}

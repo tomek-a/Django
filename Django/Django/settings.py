@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'Django.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'twitter',
+        'NAME': 'django',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
         'PASSWORD': 'coderslab',

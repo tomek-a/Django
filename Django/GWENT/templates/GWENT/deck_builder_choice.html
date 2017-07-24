@@ -1,0 +1,39 @@
+{% extends 'GWENT/base.html' %}
+
+{% block basecontent %}
+<center>
+<div class="container">
+    <div>
+        <a class="btn btn-default" href="#" role="button">Monster</a>
+        {% for leader in monster_leaders %}
+        <img src="{{ leader.thumbnail_link }}" style="width:5%">
+        {% endfor %}
+    </div>
+    <div>
+        <a class="btn btn-default" href="#" role="button">Skellige</a>
+        {% for leader in skellige_leaders %}
+        <img src="{{ leader.thumbnail_link }}" style="width:5%">
+        {% endfor %}
+    </div>
+    <div>
+        <a class="btn btn-default" href="#" role="button">Scoia'tael</a>
+        {% for leader in scoiatael_leaders %}
+        <img src="{{ leader.thumbnail_link }}" style="width:5%">
+        {% endfor %}
+    </div>
+    <div>
+        <a class="btn btn-default" href="#" role="button">Northern Realms</a>
+        {% for leader in northernrealms_leaders %}
+        <img src="{{ leader.thumbnail_link }}" style="width:5%">
+        {% endfor %}
+    </div>
+    <div>
+        <a class="btn btn-default" href="#" role="button">Nilfgaard</a>
+        {% for leader in nilfgaard_leaders %}
+        <img src="{{ leader.thumbnail_link }}" style="width:5%">
+        {% endfor %}
+    </div>
+</div>
+</center>
+
+{% endblock %}

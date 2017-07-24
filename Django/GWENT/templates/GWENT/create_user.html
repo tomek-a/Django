@@ -8,13 +8,10 @@
             <strong>{{ error }}</strong>
         </div>
         {% endif %}
-        <form class="form-group" action="{% url 'gwent_login' %}" method="POST">
+        <form class="form-group" action="{% url 'gwent_create_user' %}" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <input class="btn btn-default" type="submit" name="login" value="Log in">
-        </form>
-        <form class="form-group" action="{% url 'gwent_create_user' %}" method="GET">
-            <input class="btn btn-default" type="submit" name="login" value="Create User">
+            <input class="btn btn-default" type="submit" value="Create account">
         </form>
     </div>
 </center>

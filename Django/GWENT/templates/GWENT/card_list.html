@@ -3,11 +3,29 @@
 {% block basecontent %}
 <div class="container-fluid">
 <table class="table table-hover">
-    {% for card in card_list %}
-        <tr class='clickable-row' data-href='/GWENT/card/{{ forloop.counter }}'>
-            <td>{{ card.name }}</td>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th>Faction</th>
+        <th>Strength</th>
+        <th>Type</th>
+        <th>Rarity</th>
+    </tr>
+    {% for card in cards %}
+    <tr class='clickable-row' data-href='/GWENT/card/{{ card.pk }}'>
+        <td data-name="{{ card.name | cut:' ' }}">{{ card.name }}</td>
+        <td data-fation="{{ card.faction }}">{{ card.faction }}</td>
+        <td data-strength="{{ card.strength }}">{{ card.strength }}</td>
+        <td data-type="{{ card.type }}">{{ card.type }}</td>
+        <td data-rarity="{{ card.rarity }}">{{ card.rarity }}</td>
+    </tr>
     {% endfor %}
 </table>
+</div>
+<div class="container-fluid">
+    <ul class="pagination">
+    {% for page in page_num %}
+        <li><a href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+    {% endfor %}
+    </ul>
 </div>
 {% endblock %}

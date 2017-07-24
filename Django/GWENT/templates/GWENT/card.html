@@ -5,18 +5,17 @@
     <table>
         <tr>
             <td>
-                <img src="{{ thumbnail_link }}" class="img-responsive">
+                <img src="{{ card.thumbnail_link }}" class="img-responsive">
             </td>
             <td>
                 <ul>
-                    <li><h3>{{ name }}</h3></li>
-                    <li>Faction: {{ faction }}</li>
-                    <li>Text: {{ text }}</li>
-                    <li>Strength: {{ strength }}</li>
-                    <li>Row: {{ row }}</li>
-                    <li>Type: {{ type }}</li>
-                    <li>Rarity: {{ rarity }}</li>
-                    <li><em>Flavor: {{ flavor }}</em></li>
+                    <li><h3>{{ card.name }}</h3></li>
+                    <li>Faction: {{ card.faction }}</li>
+                    <li>Text: {{ card.text }}</li>
+                    <li>Strength: {{ card.strength }}</li>
+                    <li>Type: {{ card.type }}</li>
+                    <li>Rarity: {{ card.rarity }}</li>
+                    <li><em>Flavor: {{ card.flavor }}</em></li>
                 </ul>
             </td>
         </tr>
