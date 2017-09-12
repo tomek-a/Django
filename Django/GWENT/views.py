@@ -246,11 +246,21 @@ class DeckBuilderView(View):
 
 class DeckBuilderFactionView(View):
     def get(self, request, faction):
+        if faction == 'scoiatael':
+            faction = "Scoia'tael"
+        elif faction == 'northernrealms':
+            faction = 'Northern Realms'
         cards = Card.objects.filter(
-            Q(faction=faction) | Q(faction='neutral')
+            (Q(faction=faction) | Q(faction='neutral')), ~Q(type='leader')
         )
+        leaders = Card.objects.filter(
+            Q(faction=faction) & Q(type='leader')
+        )
+        print(leaders)
+
         ctx = {
-            'cards': cards
+            'cards': cards,
+            'leaders': leaders
         }
         return TemplateResponse(request, 'GWENT/deck_builder.html', ctx)
 

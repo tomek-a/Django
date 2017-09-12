@@ -5,7 +5,7 @@ from GWENT.models import Card
 
 def get_cards():
     url = Request(
-        'https://api.gwentapi.com/v0/cards?limit=305',  # actuall card pool size 305
+        'https://api.gwentapi.com/v0/cards?limit=305',  # actual card pool size 305
         headers={"User-Agent": "Magic-Browser"}
     )
     r = urlopen(url)
