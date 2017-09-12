@@ -2,28 +2,34 @@
 
 {% block basecontent %}
 <h3>Current Deck</h3>
-<div class="container" data->
+<div class="container deck">
 
 </div>
 <h3>Leaders</h3>
 <div class="container">
     {% for leader in leaders %}
-    <span class="leader"><img src="{{ leader.thumbnail_link }}" style="width:5%" data-toggle="tooltip" title="Hooray!"> [</span>
-    <span class="leader_counter">0</span>
-    <span>/1] </span>
+    <span class="card">
+        <span class="leader"><img src="{{ leader.thumbnail_link }}" style="width:5%" data-toggle="tooltip" title="Hooray!"> [</span>
+        <span class="leader_counter">0</span>
+        <span>/1] </span>
+    </span>
     {% endfor %}
 </div>
 <h3>Cards</h3>
 <div class="container">
     {% for card in cards %}
     {% if card.type == 'Silver' or card.type == 'Gold' %}
-    <span class="silver_gold"><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
-    <span class="silver_gold_counter">0</span>
-    <span>/1] </span>
+    <span class="card">
+        <span class="silver_gold"><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
+        <span class="silver_gold_counter">0</span>
+        <span>/1] </span>
+    </span>
     {% else %}
-    <span class="bronze"><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
-    <span class="bronze_counter">0</span>
-    <span>/3] </span>
+    <span class="bronze">
+        <span><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
+        <span class="bronze_counter">0</span>
+        <span>/3] </span>
+    </span>
     {% endif %}
     {% endfor %}
 </div>

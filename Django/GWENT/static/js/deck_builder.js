@@ -1,18 +1,26 @@
 $(".bronze").mouseup(function(e){
     if (e.which === 1) {
-        var counter = parseInt($(this).next(".bronze_counter").text(), 10)
+        var counter = parseInt($(this).find(".bronze_counter").text(), 10)
         console.log(counter)
         if (counter < 3) {
             counter += 1
-            $(this).next(".bronze_counter").text(counter);
+            $(this).find(".bronze_counter").text(counter);
+            if (counter == 1){
+                $(this).clone().appendTo(".deck");
+            }
+            else {
+                $(".deck .bronze_counter").text(counter);
+            }
+
         }
     }
     else if (e.which === 3) {
-        var counter = parseInt($(this).next(".bronze_counter").text(), 10)
+        var counter = parseInt($(this).find(".bronze_counter").text(), 10)
         console.log(counter)
         if (counter > 0) {
             counter -= 1
-            $(this).next(".bronze_counter").text(counter);
+            $(this).find(".bronze_counter").text(counter);
+
         }
     }
 
@@ -43,9 +51,9 @@ $(".silver_gold").mouseup(function(e){
 $(".leader").mouseup(function(e){
     if (e.which === 1) {
         var counter = parseInt($(this).next(".leader_counter").text(), 10)
-        console.log(counter)
         if (counter == 0) {
             counter += 1
+            $(".leader_counter").text("0")
             $(this).next(".leader_counter").text(counter);
         }
     }
