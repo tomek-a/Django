@@ -1,70 +1,37 @@
-$(".bronze").mouseup(function(e){
-    if (e.which === 1) {
-        var counter = parseInt($(this).find(".bronze_counter").text(), 10)
-        console.log(counter)
+// Adding and removing bronze cards from collection to the deck
+$(document).on('mouseup', '.card', function(){
+    var counter = parseInt($(this).find(".counter").text(), 10);
+    console.log(counter)
+    var card_name = $(this).attr("class").replace(/(card )*(bronze )*(silver_gold )*(leader )*/, "");
+    console.log(card_name)
+    var in_deck = $(this).data("in_deck");
+    console.log(in_deck)
+    if (in_deck == "No"){
         if (counter < 3) {
             counter += 1
-            $(this).find(".bronze_counter").text(counter);
+            $(this).find(".counter").text(counter);
             if (counter == 1){
-                $(this).clone().appendTo(".deck");
+                $(this).clone().attr("data-in_deck", "Yes").appendTo(".deck");
             }
             else {
-                $(".deck .bronze_counter").text(counter);
+                $(".deck ." + card_name).find(".counter").text(counter);
             }
 
         }
     }
-    else if (e.which === 3) {
-        var counter = parseInt($(this).find(".bronze_counter").text(), 10)
-        console.log(counter)
+    else {
         if (counter > 0) {
             counter -= 1
-            $(this).find(".bronze_counter").text(counter);
-
+            if (counter == 0){
+                $(this).remove()
+            }
+            else {
+                $(this).find(".counter").text(counter);
+            }
+            $(".collection ." + card_name).find(".counter").text(counter);
         }
     }
 
 });
 
-
-$(".silver_gold").mouseup(function(e){
-    if (e.which === 1) {
-        var counter = parseInt($(this).next(".silver_gold_counter").text(), 10)
-        console.log(counter)
-        if (counter == 0) {
-            counter += 1
-            $(this).next(".silver_gold_counter").text(counter);
-        }
-    }
-    else if (e.which === 3) {
-        var counter = parseInt($(this).next(".silver_gold_counter").text(), 10)
-        console.log(counter)
-        if (counter == 1) {
-            counter -= 1
-            $(this).next(".silver_gold_counter").text(counter);
-        }
-    }
-
-});
-
-
-$(".leader").mouseup(function(e){
-    if (e.which === 1) {
-        var counter = parseInt($(this).next(".leader_counter").text(), 10)
-        if (counter == 0) {
-            counter += 1
-            $(".leader_counter").text("0")
-            $(this).next(".leader_counter").text(counter);
-        }
-    }
-    else if (e.which === 3) {
-        var counter = parseInt($(this).next(".leader_counter").text(), 10)
-        console.log(counter)
-        if (counter == 1) {
-            counter -= 1
-            $(this).next(".leader_counter").text(counter);
-        }
-    }
-
-});
 
