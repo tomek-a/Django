@@ -2,33 +2,43 @@
 
 {% block basecontent %}
 <h3>Current Deck</h3>
-<div class="container deck">
+<div class="container deck"><hr>
+    <span>Leaders [<span class="leader_counter">0</span>/1]:</span><div class="leaders"></div><hr>
+    <span>Golds [<span class="gold_counter">0</span>/4]:</span><div class="goldies"></div><hr>
+    <span>Silvers [<span class="silver_counter">0</span>/6]:</span><div class="silvers"></div><hr>
+    <span>Bronzes [<span class="bronze_counter">0</span>/30]:</span><div class="bronzies"></div><hr>
 
 </div>
 <h3>Leaders</h3>
-<div class="container">
+<div class="container collection">
     {% for leader in leaders %}
-    <span class="card leader {{ card.name | cut:'\'' | cut:' '}}" data-in_deck="No">
+    <span class="card leader {{ leader.name | cut:'\'' | cut:' ' | cut:':' }}" data-in_deck="No">
         <span><img src="{{ leader.thumbnail_link }}" style="width:5%"> [</span>
         <span class="counter">0</span>
-        <span>/1] </span>
+        <span>/ 1] </span>
     </span>
     {% endfor %}
 </div>
 <h3>Cards</h3>
 <div class="container collection">
     {% for card in cards %}
-    {% if card.type == 'Silver' or card.type == 'Gold' %}
-    <span class="card silver_gold {{ card.name | cut:'\'' | cut:' '}}" data-in_deck="No">
+    {% if card.type == 'Silver'%}
+    <span class="card silver {{ card.name | cut:'\'' | cut:' ' | cut:':' }}" data-in_deck="No">
         <span><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
         <span class="counter">0</span>
-        <span>/1] </span>
+        <span>/ 1] </span>
+    </span>
+    {% elif card.type == 'Gold' %}
+    <span class="card gold {{ card.name | cut:'\'' | cut:' ' | cut:':' }}" data-in_deck="No">
+        <span><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
+        <span class="counter">0</span>
+        <span>/ 1] </span>
     </span>
     {% else %}
-    <span class="card bronze {{ card.name | cut:'\'' | cut:' '}}" data-in_deck="No">
+    <span class="card bronze {{ card.name | cut:'\'' | cut:' ' | cut:':' }}" data-in_deck="No">
         <span><img src="{{ card.thumbnail_link }}" style="width:5%"> [</span>
         <span class="counter">0</span>
-        <span>/3] </span>
+        <span>/ 3] </span>
     </span>
     {% endif %}
     {% endfor %}
